@@ -8,13 +8,31 @@ export default function Profile() {
     const { darkMode, setDarkMode } = useTheme();
     const [isEditing, setIsEditing] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
+    // const [isLoading, setIsLoading] = useState(true);
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const fileInputRef = useRef(null);
 
-    const { authUser, updateProfile, isUpdatingProfile } = useAuthStore();
-    const [selectedImg, setSelectedImg] = useState(null);
+
+
+    // const { authUser, IsUpdatingProfile, updateProfile } = useAuthStore();
+
+    // const [authUser, setAuthUser] = useState({
+    //     firstName: '',
+    //     lastName: '',
+    //     email: '',
+    //     bio: '',
+    //     profileImage: null,
+    //     currentPassword: '',
+    //     newPassword: '',
+    //     confirmPassword: '',
+    //     joinedDate: '',
+    //     totalChats: 0,
+    //     totalFriends: 0
+    // });
+
+    const [previewImage, setPreviewImage] = useState(null);
 
     // Floating message animation
     const [floatingMessages, setFloatingMessages] = useState([
@@ -23,27 +41,154 @@ export default function Profile() {
         { id: 3, text: "😊", x: 40, y: 60, delay: 2000 }
     ]);
 
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const base64Image = reader.result;
-                setSelectedImg(base64Image);
-                await updateProfile({
-                    profilePic: base64Image,
-                });
+    // Fetch profile data from backend
+    useEffect(() => {
+        fetchAuthUser();
+    }, []);
+
+    const fetchAuthUser = async () => {
+        // setIsLoading(true);
+        try {
+            // Simulate API call - replace with actual backend call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const userData = {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john.doe@example.com',
+                bio: 'Love chatting with friends and meeting new people! 💬',
+                joinedDate: 'January 2024',
+                totalChats: 147,
+                totalFriends: 23
             };
-            reader.readAsDataURL(file);
+
+            setAuthUser(userData);
+            setPreviewImage('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face');
+        } catch (error) {
+            console.error('Failed to fetch profile data:', error);
+        } finally {
+            // setIsLoading(false);
         }
     };
 
-
-
-    // Get current profile image
-    const getCurrentProfileImage = () => {
-        return selectedImg || authUser?.profilePic || null;
+    const handleInputChange = (e) => {
+        setAuthUser({
+            ...authUser,
+            [e.target.name]: e.target.value
+        });
     };
+
+
+
+    const { authUser, updateProfile, isUpdatingProfile } = useAuthStore();
+    const [ selectedImg, setSelectedImg ] = useState(null);
+    const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = async () => {
+            const base64Image = reader.result;
+            setSelectedImg(base64Image); // Update the preview image
+            await updateProfile({
+                profilePic: base64Image,
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+
+    const validateForm = () => {
+        // Basic validation
+        if (!authUser.firstName.trim() || !authUser.lastName.trim() || !authUser.email.trim()) {
+            alert('Please fill in all required fields.');
+            return false;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(authUser.email)) {
+            alert('Please enter a valid email address.');
+            return false;
+        }
+
+        // Password validation (if changing password)
+        if (authUser.newPassword) {
+            if (!authUser.currentPassword) {
+                alert('Please enter your current password to change it.');
+                return false;
+            }
+            if (authUser.newPassword.length < 6) {
+                alert('New password must be at least 6 characters long.');
+                return false;
+            }
+            if (authUser.newPassword !== authUser.confirmPassword) {
+                alert('New passwords do not match.');
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    const handleSubmit = async () => {
+        // if (!validateForm()) return;
+
+        setIsUpdating(true);
+
+        try {
+            // Simulate API call - replace with actual backend call
+            const formData = new FormData();
+            formData.append('firstName', authUser.firstName);
+            formData.append('lastName', authUser.lastName);
+            formData.append('email', authUser.email);
+            formData.append('bio', authUser.bio);
+            if (authUser.profileImage) {
+                formData.append('profileImage', authUser.profileImage);
+            }
+            if (authUser.newPassword) {
+                formData.append('currentPassword', authUser.currentPassword);
+                formData.append('newPassword', authUser.newPassword);
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            setIsEditing(false);
+            setAuthUser({
+                ...authUser,
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
+
+            // Show success message
+            alert('Profile updated successfully!');
+        } catch (error) {
+            console.error('Failed to update profile:', error);
+            alert('Failed to update profile. Please try again.');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        fetchAuthUser(); // Refresh data to cancel changes
+        setAuthUser({
+            ...authUser,
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: ''
+        });
+    };
+
+    // if (isLoading) {
+    //     return (
+    //         <div className="flex items-center justify-center h-screen">
+    //             <Loader className="size-10 animate-spin" />
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className={`min-h-screen h-full transition-colors duration-500 ${darkMode
@@ -52,7 +197,6 @@ export default function Profile() {
             }`}>
             {/* Navbar */}
             <Navbar />
-            
             {/* Main Content */}
             <div className="flex flex-col lg:flex-row px-6 py-6">
                 {/* Left Half - Chat Animation */}
@@ -111,9 +255,9 @@ export default function Profile() {
                             <div className={`relative w-32 h-32 rounded-full border-4 transition-all duration-500 ${darkMode ? 'border-purple-400' : 'border-purple-500'
                                 } overflow-hidden shadow-2xl`}
                                 style={{ animation: 'profilePulse 3s ease-in-out infinite' }}>
-                                {getCurrentProfileImage() ? (
+                                {previewImage ? (
                                     <img
-                                        src={getCurrentProfileImage()}
+                                        src={previewImage}
                                         alt="Profile"
                                         className="w-full h-full object-cover"
                                     />
@@ -137,7 +281,7 @@ export default function Profile() {
                                         <MessageCircle className={`w-6 h-6 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
                                     </div>
                                     <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                                        {authUser?.totalChats || 0}
+                                        {authUser.totalChats}
                                     </p>
                                     <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Chats</p>
                                 </div>
@@ -148,7 +292,7 @@ export default function Profile() {
                                         <Users className={`w-6 h-6 ${darkMode ? 'text-pink-400' : 'text-pink-600'}`} />
                                     </div>
                                     <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-                                        {authUser?.totalFriends || 0}
+                                        {authUser.totalFriends}
                                     </p>
                                     <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Friends</p>
                                 </div>
@@ -175,9 +319,18 @@ export default function Profile() {
                                 <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'
                                     }`}>Profile Settings</h1>
                                 <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                    Member since {authUser?.joinedDate || 'Unknown'}
+                                    Member since {authUser.joinedDate}
                                 </p>
                             </div>
+                            {!isEditing && (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                                >
+                                    <Edit3 size={18} />
+                                    Edit Profile
+                                </button>
+                            )}
                         </div>
 
                         <div className="space-y-4">
@@ -186,9 +339,9 @@ export default function Profile() {
                                 <div className="relative">
                                     <div className={`w-32 h-32 rounded-full overflow-hidden border-4 ${darkMode ? 'border-gray-600' : 'border-gray-200'
                                         }`}>
-                                        {getCurrentProfileImage() ? (
+                                        {selectedImg || authUser?.profilePic || previewImage ? (
                                             <img
-                                                src={getCurrentProfileImage()}
+                                                src={ selectedImg || authUser?.profilePic || previewImage}
                                                 alt="Profile"
                                                 className="w-full h-full object-cover"
                                             />
@@ -199,13 +352,15 @@ export default function Profile() {
                                             </div>
                                         )}
                                     </div>
-                                    <button
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className={`absolute -bottom-2 -right-2 p-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300
-                                            ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
-                                    >
-                                        <Camera size={16} />
-                                    </button>
+                                    {isEditing && (
+                                        <button
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className={`absolute -bottom-2 -right-2 p-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300
+                                                ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
+                                        >
+                                            <Camera size={16} />
+                                        </button>
+                                    )}
                                 </div>
                                 <input
                                     ref={fileInputRef}
@@ -215,25 +370,47 @@ export default function Profile() {
                                     disabled={isUpdatingProfile}
                                     className="hidden"
                                 />
-                                <p className="text-sm text-zinc-400">
-                                    {isUpdatingProfile ? "Uploading..." : "Click the camera icon to change your profile picture"}    
-                                </p>
+                                {isEditing && (
+                                    <p className="text-sm text-zinc-400">
+                                        {isUpdatingProfile ? "Uploading..." : "Click the camera icon to change your profile picture"}    
+                                    </p>
+                                )}
                             </div>
 
                             {/* Basic Information */}
-                            <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="relative">
                                     <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
                                         }`} />
                                     <input
                                         type="text"
-                                        name="fullName"
-                                        placeholder="Full Name"
-                                        value={authUser?.name || ''}
-                                        readOnly
-                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 cursor-not-allowed opacity-60 ${darkMode
+                                        name="firstName"
+                                        placeholder="First Name"
+                                        value={authUser?.name}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
                                                 ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'}`}
+                                                : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                            } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        required
+                                    />
+                                </div>
+                                <div className="relative">
+                                    <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
+                                        }`} />
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        placeholder="Last Name"
+                                        value={authUser?.lastName}
+                                        onChange={handleInputChange}
+                                        disabled={!isEditing}
+                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
+                                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                            } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        required
                                     />
                                 </div>
                             </div>
@@ -246,11 +423,14 @@ export default function Profile() {
                                     type="email"
                                     name="email"
                                     placeholder="Email Address"
-                                    value={authUser?.email || ''}
-                                    readOnly
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 cursor-not-allowed opacity-60 ${darkMode
+                                    value={authUser?.email}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
                                             ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'}`}
+                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                        } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                    required
                                 />
                             </div>
 
@@ -261,14 +441,136 @@ export default function Profile() {
                                 <textarea
                                     name="bio"
                                     placeholder="Tell your friends about yourself..."
-                                    value={authUser?.bio || ''}
-                                    readOnly
+                                    value={authUser?.bio}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
                                     rows={5}
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 resize-none cursor-not-allowed opacity-60 ${darkMode
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 resize-none ${darkMode
                                             ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'}`}
+                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                        } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
                                 />
                             </div>
+
+                            {/* Password Change Section - Only show when editing */}
+                            {isEditing && (
+                                <>
+                                    <div className={`border-t pt-6 ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                                        <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                                            Change Password (Optional)
+                                        </h3>
+
+                                        {/* Current Password */}
+                                        <div className="relative mb-4">
+                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
+                                                }`} />
+                                            <input
+                                                type={showCurrentPassword ? 'text' : 'password'}
+                                                name="currentPassword"
+                                                placeholder="Current Password"
+                                                value={authUser.currentPassword}
+                                                onChange={handleInputChange}
+                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
+                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                                    }`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
+                                                    }`}
+                                            >
+                                                {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                            </button>
+                                        </div>
+
+                                        {/* New Password */}
+                                        <div className="relative mb-4">
+                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
+                                                }`} />
+                                            <input
+                                                type={showNewPassword ? 'text' : 'password'}
+                                                name="newPassword"
+                                                placeholder="New Password"
+                                                value={authUser.newPassword}
+                                                onChange={handleInputChange}
+                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
+                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                                    }`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
+                                                    }`}
+                                            >
+                                                {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                            </button>
+                                        </div>
+
+                                        {/* Confirm New Password */}
+                                        <div className="relative">
+                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
+                                                }`} />
+                                            <input
+                                                type={showConfirmPassword ? 'text' : 'password'}
+                                                name="confirmPassword"
+                                                placeholder="Confirm New Password"
+                                                value={authUser.confirmPassword}
+                                                onChange={handleInputChange}
+                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
+                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                                    }`}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
+                                                    }`}
+                                            >
+                                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* Action Buttons - Only show when editing */}
+                            {isEditing && (
+                                <div className="flex gap-4 pt-6">
+                                    <button
+                                        disabled={isUpdating}
+                                        onClick={handleSubmit}
+                                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                    >
+                                        {isUpdating ? (
+                                            <>
+                                                <Loader2 size={18} className="animate-spin" />
+                                                Updating...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Save size={18} />
+                                                Save Changes
+                                            </>
+                                        )}
+                                    </button>
+                                    <button
+                                        disabled={isUpdating}
+                                        onClick={handleCancel}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium rounded-xl border-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${darkMode
+                                                ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                                                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                                            }`}
+                                    >
+                                        <X size={18} />
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -293,4 +595,4 @@ export default function Profile() {
            `}</style>
         </div>
     );
-};
+}

@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import Message from "../models/messageModel.js";
 import User from "../models/userModel.js";
 
