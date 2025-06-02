@@ -3,6 +3,7 @@ import { Eye, EyeOff, User, Mail, Lock, Phone, Loader2, Camera, Edit3, Save, X, 
 import { useTheme } from '../context/ThemeContext';
 import Navbar from '../components/Navbar';
 import { useAuthStore } from '../store/useAuthStore';
+import toast from 'react-hot-toast';
 
 export default function Profile() {
     const { darkMode, setDarkMode } = useTheme();
@@ -34,13 +35,13 @@ export default function Profile() {
 
     const [previewImage, setPreviewImage] = useState(null);
 
-    // Floating message animation
     const [floatingMessages, setFloatingMessages] = useState([
         { id: 1, text: "Hey!", x: 20, y: 30, delay: 0 },
         { id: 2, text: "How are you?", x: 70, y: 20, delay: 1000 },
         { id: 3, text: "😊", x: 40, y: 60, delay: 2000 }
     ]);
 
+<<<<<<< HEAD
     // Fetch profile data from backend
     useEffect(() => {
         fetchAuthUser();
@@ -76,6 +77,71 @@ export default function Profile() {
             ...authUser,
             [e.target.name]: e.target.value
         });
+=======
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image size should be less than 5MB');
+            return;
+        }
+
+        try {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const img = new Image();
+                img.src = reader.result;
+                img.onload = async () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Calculate new dimensions (max 800px width/height)
+                    let width = img.width;
+                    let height = img.height;
+                    const maxSize = 800;
+
+                    if (width > height && width > maxSize) {
+                        height = (height * maxSize) / width;
+                        width = maxSize;
+                    } else if (height > maxSize) {
+                        width = (width * maxSize) / height;
+                        height = maxSize;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    try {
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        setSelectedImg(compressedBase64);
+                        await updateProfile({
+                            profilePic: compressedBase64
+                        });
+                    } catch (error) {
+                        console.error('Error processing image:', error);
+                        toast.error('Failed to process image. Please try again.');
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Error reading file:', error);
+            toast.error('Failed to read image file. Please try again.');
+        }
+    };
+
+    const getCurrentProfileImage = () => {
+        return selectedImg || authUser?.profilePic || null;
+>>>>>>> c4495d73445aa3938d82f6d67c4a13ddfc72a283
     };
 
 
