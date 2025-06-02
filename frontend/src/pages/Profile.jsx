@@ -3,6 +3,7 @@ import { Eye, EyeOff, User, Mail, Lock, Phone, Loader2, Camera, Edit3, Save, X, 
 import { useTheme } from '../context/ThemeContext';
 import Navbar from '../components/Navbar';
 import { useAuthStore } from '../store/useAuthStore';
+import toast from 'react-hot-toast';
 
 export default function Profile() {
     const { darkMode, setDarkMode } = useTheme();
@@ -16,23 +17,34 @@ export default function Profile() {
     const { authUser, updateProfile, isUpdatingProfile } = useAuthStore();
     const [selectedImg, setSelectedImg] = useState(null);
 
-    // Floating message animation
     const [floatingMessages, setFloatingMessages] = useState([
         { id: 1, text: "Hey!", x: 20, y: 30, delay: 0 },
         { id: 2, text: "How are you?", x: 70, y: 20, delay: 1000 },
         { id: 3, text: "😊", x: 40, y: 60, delay: 2000 }
     ]);
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            toast.error('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Image size should be less than 5MB');
+            return;
+        }
+
+        try {
             const reader = new FileReader();
             reader.onload = async () => {
-                // Create an image element to get dimensions
                 const img = new Image();
                 img.src = reader.result;
                 img.onload = async () => {
-                    // Create a canvas to compress the image
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
 
@@ -49,30 +61,29 @@ export default function Profile() {
                         height = maxSize;
                     }
 
-                    // Set canvas dimensions and draw image
                     canvas.width = width;
                     canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Get compressed base64 string (0.7 quality)
-                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                    
-                    setSelectedImg(compressedBase64);
                     try {
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                        setSelectedImg(compressedBase64);
                         await updateProfile({
-                            profilePic: compressedBase64,
+                            profilePic: compressedBase64
                         });
                     } catch (error) {
-                        console.error('Error uploading image:', error);
-                        toast.error('Failed to upload image. Please try again.');
+                        console.error('Error processing image:', error);
+                        toast.error('Failed to process image. Please try again.');
                     }
                 };
             };
             reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Error reading file:', error);
+            toast.error('Failed to read image file. Please try again.');
         }
     };
 
-    // Get current profile image
     const getCurrentProfileImage = () => {
         return selectedImg || authUser?.profilePic || null;
     };
@@ -325,6 +336,4 @@ export default function Profile() {
            `}</style>
         </div>
     );
-};
-
-export default Profile
+}
