@@ -28,17 +28,49 @@ export default function Profile() {
         if (file) {
             const reader = new FileReader();
             reader.onload = async () => {
-                const base64Image = reader.result;
-                setSelectedImg(base64Image);
-                await updateProfile({
-                    profilePic: base64Image,
-                });
+                // Create an image element to get dimensions
+                const img = new Image();
+                img.src = reader.result;
+                img.onload = async () => {
+                    // Create a canvas to compress the image
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Calculate new dimensions (max 800px width/height)
+                    let width = img.width;
+                    let height = img.height;
+                    const maxSize = 800;
+
+                    if (width > height && width > maxSize) {
+                        height = (height * maxSize) / width;
+                        width = maxSize;
+                    } else if (height > maxSize) {
+                        width = (width * maxSize) / height;
+                        height = maxSize;
+                    }
+
+                    // Set canvas dimensions and draw image
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Get compressed base64 string (0.7 quality)
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    setSelectedImg(compressedBase64);
+                    try {
+                        await updateProfile({
+                            profilePic: compressedBase64,
+                        });
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                        toast.error('Failed to upload image. Please try again.');
+                    }
+                };
             };
             reader.readAsDataURL(file);
         }
     };
-
-
 
     // Get current profile image
     const getCurrentProfileImage = () => {
@@ -294,3 +326,5 @@ export default function Profile() {
         </div>
     );
 };
+
+export default Profile
