@@ -3,7 +3,6 @@ import { Eye, EyeOff, User, Mail, Lock, Phone, Loader2, Camera, Edit3, Save, X, 
 import { useTheme } from '../context/ThemeContext';
 import Navbar from '../components/Navbar';
 import { useAuthStore } from '../store/useAuthStore';
-import toast from 'react-hot-toast';
 
 export default function Profile() {
     const { darkMode, setDarkMode } = useTheme();
@@ -35,13 +34,13 @@ export default function Profile() {
 
     const [previewImage, setPreviewImage] = useState(null);
 
+    // Floating message animation
     const [floatingMessages, setFloatingMessages] = useState([
         { id: 1, text: "Hey!", x: 20, y: 30, delay: 0 },
         { id: 2, text: "How are you?", x: 70, y: 20, delay: 1000 },
         { id: 3, text: "😊", x: 40, y: 60, delay: 2000 }
     ]);
 
-<<<<<<< HEAD
     // Fetch profile data from backend
     useEffect(() => {
         fetchAuthUser();
@@ -68,7 +67,7 @@ export default function Profile() {
         } catch (error) {
             console.error('Failed to fetch profile data:', error);
         } finally {
-            // setIsLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -77,91 +76,26 @@ export default function Profile() {
             ...authUser,
             [e.target.name]: e.target.value
         });
-=======
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            toast.error('Please select an image file');
-            return;
-        }
-
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            toast.error('Image size should be less than 5MB');
-            return;
-        }
-
-        try {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const img = new Image();
-                img.src = reader.result;
-                img.onload = async () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Calculate new dimensions (max 800px width/height)
-                    let width = img.width;
-                    let height = img.height;
-                    const maxSize = 800;
-
-                    if (width > height && width > maxSize) {
-                        height = (height * maxSize) / width;
-                        width = maxSize;
-                    } else if (height > maxSize) {
-                        width = (width * maxSize) / height;
-                        height = maxSize;
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    try {
-                        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-                        setSelectedImg(compressedBase64);
-                        await updateProfile({
-                            profilePic: compressedBase64
-                        });
-                    } catch (error) {
-                        console.error('Error processing image:', error);
-                        toast.error('Failed to process image. Please try again.');
-                    }
-                };
-            };
-            reader.readAsDataURL(file);
-        } catch (error) {
-            console.error('Error reading file:', error);
-            toast.error('Failed to read image file. Please try again.');
-        }
-    };
-
-    const getCurrentProfileImage = () => {
-        return selectedImg || authUser?.profilePic || null;
->>>>>>> c4495d73445aa3938d82f6d67c4a13ddfc72a283
     };
 
 
 
     const { authUser, updateProfile, isUpdatingProfile } = useAuthStore();
-    const [ selectedImg, setSelectedImg ] = useState(null);
+    const [selectedImg, setSelectedImg] = useState(null);
     const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = async () => {
-            const base64Image = reader.result;
-            setSelectedImg(base64Image); // Update the preview image
-            await updateProfile({
-                profilePic: base64Image,
-            });
-        };
-        reader.readAsDataURL(file);
-    }
-};
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const base64Image = reader.result;
+                setSelectedImg(base64Image); // Update the preview image
+                await updateProfile({
+                    profilePic: base64Image,
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
 
     const validateForm = () => {
@@ -301,8 +235,8 @@ export default function Profile() {
                                 <div
                                     key={message.id}
                                     className={`absolute px-3 py-3 rounded-full text-sm font-medium transition-all duration-1000 ${darkMode
-                                            ? 'bg-gray-700/80 text-white border border-purple-500/30'
-                                            : 'bg-white/80 text-gray-800 border border-purple-300/30'
+                                        ? 'bg-gray-700/80 text-white border border-purple-500/30'
+                                        : 'bg-white/80 text-gray-800 border border-purple-300/30'
                                         } backdrop-blur-sm shadow-lg`}
                                     style={{
                                         left: `${message.x}%`,
@@ -385,7 +319,10 @@ export default function Profile() {
                                 <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'
                                     }`}>Profile Settings</h1>
                                 <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                                    Member since {authUser.joinedDate}
+                                    Member since {new Date(authUser.createdAt).toLocaleString('en-IN', {
+                                        dateStyle: 'medium',
+                                        // timeStyle: 'short',
+                                    })}
                                 </p>
                             </div>
                             {!isEditing && (
@@ -407,7 +344,7 @@ export default function Profile() {
                                         }`}>
                                         {selectedImg || authUser?.profilePic || previewImage ? (
                                             <img
-                                                src={ selectedImg || authUser?.profilePic || previewImage}
+                                                src={selectedImg || authUser?.profilePic || previewImage}
                                                 alt="Profile"
                                                 className="w-full h-full object-cover"
                                             />
@@ -438,7 +375,7 @@ export default function Profile() {
                                 />
                                 {isEditing && (
                                     <p className="text-sm text-zinc-400">
-                                        {isUpdatingProfile ? "Uploading..." : "Click the camera icon to change your profile picture"}    
+                                        {isUpdatingProfile ? "Uploading..." : "Click the camera icon to change your profile picture"}
                                     </p>
                                 )}
                             </div>
@@ -456,9 +393,9 @@ export default function Profile() {
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
                                         className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                            } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                            }`}
                                         required
                                     />
                                 </div>
@@ -473,9 +410,9 @@ export default function Profile() {
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
                                         className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                            } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                            }`}
                                         required
                                     />
                                 </div>
@@ -493,9 +430,9 @@ export default function Profile() {
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                        } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                        }`}
                                     required
                                 />
                             </div>
@@ -507,14 +444,14 @@ export default function Profile() {
                                 <textarea
                                     name="bio"
                                     placeholder="Tell your friends about yourself..."
-                                    value={authUser?.bio}
+                                    value={authUser.bio}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     rows={5}
                                     className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 resize-none ${darkMode
-                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                        } ${!isEditing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                        }`}
                                 />
                             </div>
 
@@ -537,8 +474,8 @@ export default function Profile() {
                                                 value={authUser.currentPassword}
                                                 onChange={handleInputChange}
                                                 className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
                                                     }`}
                                             />
                                             <button
@@ -562,8 +499,8 @@ export default function Profile() {
                                                 value={authUser.newPassword}
                                                 onChange={handleInputChange}
                                                 className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
                                                     }`}
                                             />
                                             <button
@@ -587,8 +524,8 @@ export default function Profile() {
                                                 value={authUser.confirmPassword}
                                                 onChange={handleInputChange}
                                                 className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
+                                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
                                                     }`}
                                             />
                                             <button
@@ -628,8 +565,8 @@ export default function Profile() {
                                         disabled={isUpdating}
                                         onClick={handleCancel}
                                         className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium rounded-xl border-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${darkMode
-                                                ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
-                                                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                                            ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                                            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                                             }`}
                                     >
                                         <X size={18} />
