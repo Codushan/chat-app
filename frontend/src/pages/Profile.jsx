@@ -1,11 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Eye, EyeOff, User, Mail, Lock, Phone, Loader2, Camera, Edit3, Save, X, MessageCircle, Users, Heart, Loader } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
-import Navbar from '../components/Navbar';
+// import { useTheme } from '../context/ThemeContext';
 import { useAuthStore } from '../store/useAuthStore';
 
 export default function Profile() {
-    const { darkMode, setDarkMode } = useTheme();
+    // const { false, setfalse } = useTheme();
     const [isEditing, setIsEditing] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     // const [isLoading, setIsLoading] = useState(true);
@@ -191,10 +190,7 @@ export default function Profile() {
     // }
 
     return (
-        <div  className={`min-h-screen transition-colors duration-500 ${darkMode
-            ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900'
-            : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
-            }`}>
+        <div  className={`min-h-screen transition-colors duration-500 `}>
             {/* Main Content */}
             <div className="flex flex-col lg:flex-row px-6 py-6">
                 {/* Left Half - Chat Animation */}
@@ -203,24 +199,21 @@ export default function Profile() {
                         {/* Chat Bubbles Background */}
                         <div className="absolute inset-0 overflow-hidden">
                             {/* Large Chat Bubble */}
-                            <div className={`absolute top-1/4 left-1/4 w-32 h-20 rounded-3xl transition-all duration-3000 ${darkMode ? 'bg-purple-500/20' : 'bg-purple-200/40'
-                                } animate-pulse`}
+                            <div className={`absolute top-1/4 left-1/4 w-32 h-20 rounded-3xl transition-all duration-3000  animate-pulse`}
                                 style={{
                                     animation: 'float 6s ease-in-out infinite',
                                     animationDelay: '0s'
                                 }}></div>
 
                             {/* Medium Chat Bubble */}
-                            <div className={`absolute top-1/2 right-1/4 w-24 h-16 rounded-3xl transition-all duration-3000 ${darkMode ? 'bg-pink-500/20' : 'bg-pink-200/40'
-                                } animate-pulse`}
+                            <div className={`absolute top-1/2 right-1/4 w-24 h-16 rounded-3xl transition-all duration-3000  animate-pulse`}
                                 style={{
                                     animation: 'float 6s ease-in-out infinite',
                                     animationDelay: '2s'
                                 }}></div>
 
                             {/* Small Chat Bubble */}
-                            <div className={`absolute bottom-1/3 left-1/3 w-16 h-12 rounded-2xl transition-all duration-3000 ${darkMode ? 'bg-blue-500/20' : 'bg-blue-200/40'
-                                } animate-pulse`}
+                            <div className={`absolute bottom-1/3 left-1/3 w-16 h-12 rounded-2xl transition-all duration-3000  animate-pulse`}
                                 style={{
                                     animation: 'float 6s ease-in-out infinite',
                                     animationDelay: '4s'
@@ -232,10 +225,7 @@ export default function Profile() {
                             {floatingMessages.map((message) => (
                                 <div
                                     key={message.id}
-                                    className={`absolute px-3 py-3 rounded-full text-sm font-medium transition-all duration-1000 ${darkMode
-                                        ? 'bg-gray-700/80 text-white border border-purple-500/30'
-                                        : 'bg-white/80 text-gray-800 border border-purple-300/30'
-                                        } backdrop-blur-sm shadow-lg`}
+                                    className={`absolute px-3 py-3 rounded-full text-sm font-medium transition-all duration-1000  backdrop-blur-sm shadow-lg`}
                                     style={{
                                         left: `${message.x}%`,
                                         top: `${message.y}%`,
@@ -250,8 +240,7 @@ export default function Profile() {
 
                         {/* Central Profile Icon with Chat Animation */}
                         <div className="relative z-10 flex flex-col items-center">
-                            <div className={`relative w-32 h-32 rounded-full border-4 transition-all duration-500 ${darkMode ? 'border-purple-400' : 'border-purple-500'
-                                } overflow-hidden shadow-2xl`}
+                            <div className={`relative w-32 h-32 rounded-full border-4 transition-all duration-500  overflow-hidden shadow-2xl`}
                                 style={{ animation: 'profilePulse 3s ease-in-out infinite' }}>
                                 {previewImage ? (
                                     <img
@@ -260,9 +249,8 @@ export default function Profile() {
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (
-                                    <div className={`w-full h-full flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                                        }`}>
-                                        <User className={`w-16 h-16 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                                    <div className={`w-full h-full flex items-center justify-center `}>
+                                        <User className={`w-16 h-16 `} />
                                     </div>
                                 )}
 
@@ -274,31 +262,28 @@ export default function Profile() {
                             {/* Chat Stats */}
                             <div className="mt-8 flex space-x-8">
                                 <div className="text-center">
-                                    <div className={`flex items-center justify-center w-12 h-12 rounded-full ${darkMode ? 'bg-purple-500/20' : 'bg-purple-100'
-                                        } mb-2`}>
-                                        <MessageCircle className={`w-6 h-6 ${darkMode ? 'text-purple-400' : 'text-purple-600'}`} />
+                                    <div className={`flex items-center justify-center w-12 h-12 rounded-full mb-2`}>
+                                        <MessageCircle className={`w-6 h-6 `} />
                                     </div>
-                                    <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                                    <p className={`text-2xl font-bold `}>
                                         {authUser.totalChats}
                                     </p>
-                                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Chats</p>
+                                    <p className={`text-sm `}>Chats</p>
                                 </div>
 
                                 <div className="text-center">
-                                    <div className={`flex items-center justify-center w-12 h-12 rounded-full ${darkMode ? 'bg-pink-500/20' : 'bg-pink-100'
-                                        } mb-2`}>
-                                        <Users className={`w-6 h-6 ${darkMode ? 'text-pink-400' : 'text-pink-600'}`} />
+                                    <div className={`flex items-center justify-center w-12 h-12 rounded-full  mb-2`}>
+                                        <Users className={`w-6 h-6 `} />
                                     </div>
-                                    <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                                    <p className={`text-2xl font-bold `}>
                                         {authUser.totalFriends}
                                     </p>
-                                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Friends</p>
+                                    <p className={`text-sm `}>Friends</p>
                                 </div>
                             </div>
 
                             {/* Welcome Text */}
-                            <div className={`mt-8 text-center transition-all duration-500 ${darkMode ? 'text-white' : 'text-gray-800'
-                                }`}>
+                            <div className={`mt-8 text-center transition-all duration-500`}>
                                 <h2 className="text-3xl font-bold mb-2">Your Profile</h2>
                                 <p className="text-lg opacity-80">Manage your chat settings</p>
                             </div>
@@ -308,15 +293,13 @@ export default function Profile() {
 
                 {/* Right Half - Profile Form */}
                 <div className="flex-1 flex items-center justify-center order-2 lg:order-none">
-                    <div className={`w-full max-w-2xl p-4 sm:p-8 rounded-3xl shadow-2xl transition-all duration-500 ${darkMode ? 'bg-gray-800/50 backdrop-blur-lg' : 'bg-white/70 backdrop-blur-lg'
-                        }`}>
+                    <div className={`w-full max-w-2xl p-4 sm:p-8 rounded-3xl shadow-2xl transition-all duration-500 `}>
 
                         {/* Header with Edit Button */}
                         <div className="flex justify-between items-center mb-2">
                             <div>
-                                <h1 className={`text-3xl font-bold mb-2 ${darkMode ? 'text-white' : 'text-gray-800'
-                                    }`}>Profile Settings</h1>
-                                <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                                <h1 className={`text-3xl font-bold mb-2`}>Profile Settings</h1>
+                                <p>
                                     Member since {new Date(authUser.createdAt).toLocaleString('en-IN', {
                                         dateStyle: 'medium',
                                         // timeStyle: 'short',
@@ -338,8 +321,7 @@ export default function Profile() {
                             {/* Profile Image Section */}
                             <div className="flex flex-col items-center space-y-4">
                                 <div className="relative">
-                                    <div className={`w-32 h-32 rounded-full overflow-hidden border-4 ${darkMode ? 'border-gray-600' : 'border-gray-200'
-                                        }`}>
+                                    <div className={`w-32 h-32 rounded-full overflow-hidden border-4 `}>
                                         {selectedImg || authUser?.profilePic || previewImage ? (
                                             <img
                                                 src={selectedImg || authUser?.profilePic || previewImage}
@@ -347,9 +329,8 @@ export default function Profile() {
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <div className={`w-full h-full flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                                                }`}>
-                                                <User className={`w-12 h-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                                            <div className={`w-full h-full flex items-center justify-center `}>
+                                                <User className={`w-12 h-12 `} />
                                             </div>
                                         )}
                                     </div>
@@ -381,8 +362,7 @@ export default function Profile() {
                             {/* Basic Information */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="relative">
-                                    <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                        }`} />
+                                    <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5`} />
                                     <input
                                         type="text"
                                         name="firstName"
@@ -390,16 +370,12 @@ export default function Profile() {
                                         value={authUser?.name}
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
-                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                            }`}
+                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200`}
                                         required
                                     />
                                 </div>
                                 <div className="relative">
-                                    <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                        }`} />
+                                    <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 `} />
                                     <input
                                         type="text"
                                         name="lastName"
@@ -407,10 +383,7 @@ export default function Profile() {
                                         value={authUser?.lastName}
                                         onChange={handleInputChange}
                                         disabled={!isEditing}
-                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                            : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                            }`}
+                                        className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200`}
                                         required
                                     />
                                 </div>
@@ -418,8 +391,7 @@ export default function Profile() {
 
                             {/* Email */}
                             <div className="relative">
-                                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                    }`} />
+                                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5`} />
                                 <input
                                     type="email"
                                     name="email"
@@ -427,18 +399,14 @@ export default function Profile() {
                                     value={authUser?.email}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                        }`}
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 `}
                                     required
                                 />
                             </div>
 
                             {/* Bio */}
                             <div className="relative">
-                                <MessageCircle className={`absolute left-3 top-4 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                    }`} />
+                                <MessageCircle className={`absolute left-3 top-4 w-5 h-5 `} />
                                 <textarea
                                     name="bio"
                                     placeholder="Tell your friends about yourself..."
@@ -446,41 +414,33 @@ export default function Profile() {
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     rows={5}
-                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 resize-none ${darkMode
-                                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                        : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                        }`}
+                                    className={`w-full pl-12 pr-4 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 resize-none `}
                                 />
                             </div>
 
                             {/* Password Change Section - Only show when editing */}
                             {isEditing && (
                                 <>
-                                    <div className={`border-t pt-6 ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}>
-                                        <h3 className={`text-lg font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                                    <div className={`border-t pt-6`}>
+                                        <h3 className={`text-lg font-semibold mb-4 `}>
                                             Change Password (Optional)
                                         </h3>
 
                                         {/* Current Password */}
                                         <div className="relative mb-4">
-                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                                }`} />
+                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 `} />
                                             <input
                                                 type={showCurrentPassword ? 'text' : 'password'}
                                                 name="currentPassword"
                                                 placeholder="Current Password"
                                                 value={authUser.currentPassword}
                                                 onChange={handleInputChange}
-                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                                    }`}
+                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 `}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
-                                                    }`}
+                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 `}
                                             >
                                                 {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                             </button>
@@ -488,24 +448,19 @@ export default function Profile() {
 
                                         {/* New Password */}
                                         <div className="relative mb-4">
-                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                                }`} />
+                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 `} />
                                             <input
                                                 type={showNewPassword ? 'text' : 'password'}
                                                 name="newPassword"
                                                 placeholder="New Password"
                                                 value={authUser.newPassword}
                                                 onChange={handleInputChange}
-                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                                    }`}
+                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 `}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowNewPassword(!showNewPassword)}
-                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
-                                                    }`}
+                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2`}
                                             >
                                                 {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                             </button>
@@ -513,24 +468,19 @@ export default function Profile() {
 
                                         {/* Confirm New Password */}
                                         <div className="relative">
-                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'
-                                                }`} />
+                                            <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 `} />
                                             <input
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 name="confirmPassword"
                                                 placeholder="Confirm New Password"
                                                 value={authUser.confirmPassword}
                                                 onChange={handleInputChange}
-                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 ${darkMode
-                                                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                                                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-500'
-                                                    }`}
+                                                className={`w-full pl-12 pr-12 py-3 rounded-xl border-2 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 `}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${darkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
-                                                    }`}
+                                                className={`absolute right-3 top-1/2 transform -translate-y-1/2 `}
                                             >
                                                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                             </button>
@@ -562,10 +512,7 @@ export default function Profile() {
                                     <button
                                         disabled={isUpdating}
                                         onClick={handleCancel}
-                                        className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium rounded-xl border-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${darkMode
-                                            ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
-                                            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                                            }`}
+                                        className={`flex-1 flex items-center justify-center gap-2 py-3 font-medium rounded-xl border-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed `}
                                     >
                                         <X size={18} />
                                         Cancel

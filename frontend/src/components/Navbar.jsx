@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Settings, Moon, Sun, User, LogOut, Menu, X, LogIn } from 'lucide-react';
-import { useTheme } from '../context/ThemeContext';
+// import { useTheme } from '../context/ThemeContext';
 import { useAuthStore } from '../store/useAuthStore';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const { authUser, isLoggingIn, logout } = useAuthStore();
-    const { darkMode, setDarkMode } = useTheme();
+    // const { darkMode, setDarkMode } = useTheme();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Since login expects data, you'll need to handle this differently
@@ -35,11 +35,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className={` ${
-      darkMode 
-        ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900' 
-        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
-    }`}>
+        <nav className={``}>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
@@ -53,32 +49,23 @@ const Navbar = () => {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-6">
                         {/* Settings Icon */}
-                        <Link to="/settings" className={`p-2 rounded-lg transition-colors ${
-                            darkMode 
-                                ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                        }`}>
+                        <Link to="/settings" className={`p-2 rounded-lg transition-colors `}>
                             <Settings size={20} />
                         </Link>
 
                         {/* Theme Toggle */}
-                        <button
-                            onClick={() => setDarkMode(!darkMode)}
-                            className={`p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 ${darkMode ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' : 'bg-white text-gray-700 hover:bg-gray-100'
-                                } shadow-lg`}
+                        {/* <button
+                            onClick={() => }
+                            className={`p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg`}
                         >
                             {darkMode ? <Sun size={18} className="sm:w-5 sm:h-5" /> : <Moon size={18} className="sm:w-5 sm:h-5" />}
-                        </button>
+                        </button> */}
 
                         {/* Conditional Menu Items based on authUser */}
                         {authUser ? (
                             <>
                                 {/* Profile */}
-                                <Link to="/profile" className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-                                    darkMode 
-                                        ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                                }`}>
+                                <Link to="/profile" className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors`}>
                                     <User size={18} />
                                     <span className="text-sm font-medium">Profile</span>
                                 </Link>
@@ -102,11 +89,7 @@ const Navbar = () => {
                     <div className="md:hidden">
                         <button
                             onClick={toggleMobileMenu}
-                            className={`p-2 rounded-lg transition-colors ${
-                                darkMode 
-                                    ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                            }`}
+                            className={`p-2 rounded-lg transition-colors `}
                         >
                             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -120,11 +103,7 @@ const Navbar = () => {
                     }`}>
                         <div className="flex flex-col space-y-3">
                             {/* Settings */}
-                            <Link to="/settings" className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors ${
-                                darkMode 
-                                    ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                            }`}>
+                            <Link to="/settings" className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors `}>
                                 <Settings size={20} />
                                 <span>Settings</span>
                             </Link>
@@ -132,11 +111,7 @@ const Navbar = () => {
                             {/* Theme Toggle */}
                             <button 
                                 onClick={() => setDarkMode(!darkMode)}
-                                className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors ${
-                                    darkMode 
-                                        ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                                }`}
+                                className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors `}
                             >
                                 {darkMode ? <Sun size={20} /> : <Moon size={20} />}
                                 <span>Theme</span>
@@ -146,11 +121,7 @@ const Navbar = () => {
                             {authUser ? (
                                 <>
                                     {/* Profile */}
-                                    <Link to="/profile" className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors ${
-                                        darkMode 
-                                            ? 'text-gray-300 hover:text-white hover:bg-gray-800' 
-                                            : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                                    }`}>
+                                    <Link to="/profile" className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors `}>
                                         <User size={20} />
                                         <span>Profile</span>
                                     </Link>

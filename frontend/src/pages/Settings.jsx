@@ -7,11 +7,12 @@ const PREVIEW_MESSAGES = [
   { id: 2, content: "I'm doing great! Just working on some new features.", isSent: true },
 ];
 
-const SettingsPage = () => {
+const Settings = () => {
   const { theme, setTheme } = useThemeStore();
+  console.log("Current theme:", theme);
 
   return (
-    <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
+    <div data-theme = "cupcake" className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
       <div className="space-y-6">
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">Theme</h2>
@@ -113,4 +114,4 @@ const SettingsPage = () => {
     </div>
   );
 };
-export default SettingsPage;
+export default Settings;
