@@ -37,7 +37,7 @@ export default function App() {
   return (
     <div className="App">
       {/* Theme Switcher - temporary for testing */}
-      <div className="p-4 bg-base-200">
+      {/* <div className="p-4 bg-base-200">
         <select 
           value={currentTheme} 
           onChange={(e) => setCurrentTheme(e.target.value)}
@@ -52,7 +52,7 @@ export default function App() {
           <option value="cupcake">Cupcake</option>
         </select>
         <span className="ml-2 text-base-content">Current theme: {currentTheme}</span>
-      </div>
+      </div> */}
       
       <Navbar />
       <Routes>

@@ -191,12 +191,10 @@ export default function Profile() {
     // }
 
     return (
-        <div className={`min-h-screen h-full transition-colors duration-500 ${darkMode
+        <div  className={`min-h-screen transition-colors duration-500 ${darkMode
             ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900'
             : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
             }`}>
-            {/* Navbar */}
-            <Navbar />
             {/* Main Content */}
             <div className="flex flex-col lg:flex-row px-6 py-6">
                 {/* Left Half - Chat Animation */}
