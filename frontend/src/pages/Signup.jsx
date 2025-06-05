@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Settings, Moon, Sun, Eye, EyeOff, User, Mail, Lock, Phone, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Eye, EyeOff, User, Mail, Lock, Loader2 } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -12,7 +12,6 @@ export default function SignupPage() {
         firstName: '',
         lastName: '',
         email: '',
-        // phone: '',
         password: '',
         confirmPassword: ''
     });

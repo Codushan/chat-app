@@ -41,29 +41,7 @@ export default function Login() {
 
   return (
     <div className={`min-h-screen h-full transition-colors duration-500`}>
-        {/* <Navbar /> */}
-      {/* Header */}
-      {/* <header className="flex justify-between items-center p-4 sm:p-6">
-        <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          BAATWAAT
-        </div>
-        <div className="flex items-center gap-2 sm:gap-4">
-          <button className={`p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 ${
-            darkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-white text-gray-700 hover:bg-gray-100'
-          } shadow-lg`}>
-            <Settings size={18} className="sm:w-5 sm:h-5" />
-          </button>
-          <button 
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 ${
-              darkMode ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' : 'bg-white text-gray-700 hover:bg-gray-100'
-            } shadow-lg`}
-          >
-            {darkMode ? <Sun size={18} className="sm:w-5 sm:h-5" /> : <Moon size={18} className="sm:w-5 sm:h-5" />}
-          </button>
-        </div>
-      </header> */}
-
+      
       {/* Main Content */}
       <div className="flex flex-col lg:flex-row min-h-[calc(100vh-120px)] h-full px-6 pb-6">
         {/* Left Half - Door Opening Animation */}
@@ -166,7 +144,7 @@ export default function Login() {
           <div className={`w-full max-w-xl p-6 sm:p-8 rounded-3xl shadow-2xl transition-all duration-500 `}>
             <div className="text-center mb-8">
               <h1 className={`text-3xl font-bold mb-2 `}>Sign In</h1>
-              <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <p>
                 Continue your conversation
               </p>
             </div>

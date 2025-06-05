@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Settings, Moon, Sun, User, LogOut, Menu, X, LogIn } from 'lucide-react';
-// import { useTheme } from '../context/ThemeContext';
 import { useAuthStore } from '../store/useAuthStore';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const { authUser, isLoggingIn, logout } = useAuthStore();
-    // const { darkMode, setDarkMode } = useTheme();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Since login expects data, you'll need to handle this differently

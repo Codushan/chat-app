@@ -42,6 +42,5 @@ export default {
       "nord",
       "sunset",
     ],
-    logs: true
   },
 };

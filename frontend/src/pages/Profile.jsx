@@ -13,24 +13,6 @@ export default function Profile() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const fileInputRef = useRef(null);
 
-
-
-    // const { authUser, IsUpdatingProfile, updateProfile } = useAuthStore();
-
-    // const [authUser, setAuthUser] = useState({
-    //     firstName: '',
-    //     lastName: '',
-    //     email: '',
-    //     bio: '',
-    //     profileImage: null,
-    //     currentPassword: '',
-    //     newPassword: '',
-    //     confirmPassword: '',
-    //     joinedDate: '',
-    //     totalChats: 0,
-    //     totalFriends: 0
-    // });
-
     const [previewImage, setPreviewImage] = useState(null);
 
     // Floating message animation
@@ -190,7 +172,7 @@ export default function Profile() {
     // }
 
     return (
-        <div  className={`min-h-screen transition-colors duration-500 `}>
+        <div  className={`h-full transition-colors duration-500 `}>
             {/* Main Content */}
             <div className="flex flex-col lg:flex-row px-6 py-6">
                 {/* Left Half - Chat Animation */}
