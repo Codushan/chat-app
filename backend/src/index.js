@@ -2,8 +2,8 @@ import express from 'express';
 
 import path from "path";
 
-import authRoutes from './routes/authRoute.js';
-import messageRoutes from './routes/messageRoute.js';
+import authRoute from './routes/authRoute.js';
+import messageRoute from './routes/messageRoute.js';
 import dotenv from 'dotenv';
 import { connectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
@@ -23,8 +23,8 @@ app.use(cors({
     credentials: true, // Allow cookies to be sent with requests
 }));
 
-app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes);
+app.use("/api/auth", authRoute);
+app.use("/api/messages", messageRoute);
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
