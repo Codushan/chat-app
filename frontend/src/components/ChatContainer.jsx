@@ -17,7 +17,7 @@ export default function ChatContainer() {
         getMessages(selectedUser._id);
         subscribeToMessages();
         return () => unsubscribeFromMessages();
-    }, [selectedUser.id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
     useEffect(() => {
         if(messageEndRef.current && messages){
