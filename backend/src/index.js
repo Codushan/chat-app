@@ -1,4 +1,7 @@
 import express from 'express';
+
+import path from "path";
+
 import authRoutes from './routes/authRoute.js';
 import messageRoutes from './routes/messageRoute.js';
 import dotenv from 'dotenv';
@@ -7,10 +10,11 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { app, server } from './lib/socket.js';
 
+
 dotenv.config();
 
 const PORT = process.env.PORT;
-
+const __dirname = path.resolve();
 
 // app.get('/', (req, res) => {
 //   res.send('Hello from backend!');
@@ -26,7 +30,13 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/dist', 'dist', 'index.html'));
+    });
+}
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
