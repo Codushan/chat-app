@@ -7,22 +7,6 @@ const Navbar = () => {
     const { authUser, isLoggingIn, logout } = useAuthStore();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Since login expects data, you'll need to handle this differently
-    // This is just for demonstration - you'll likely want to redirect to a login page
-    const handleLogin = () => {
-        // Option 1: Redirect to login page
-        // navigate('/login');
-        
-        // Option 2: Open login modal
-        // setShowLoginModal(true);
-        
-        // For now, just close mobile menu
-        setIsMobileMenuOpen(false);
-        
-        // You can't call login() directly here since it expects login data
-        console.log('Redirect to login page or open login modal');
-    };
-
     const handleLogout = async () => {
         await logout();
         setIsMobileMenuOpen(false);
@@ -51,15 +35,6 @@ const Navbar = () => {
                             <Settings size={20} />
                         </Link>
 
-                        {/* Theme Toggle */}
-                        {/* <button
-                            onClick={() => }
-                            className={`p-2 sm:p-3 rounded-full transition-all duration-300 hover:scale-110 shadow-lg`}
-                        >
-                            {darkMode ? <Sun size={18} className="sm:w-5 sm:h-5" /> : <Moon size={18} className="sm:w-5 sm:h-5" />}
-                        </button> */}
-
-                        {/* Conditional Menu Items based on authUser */}
                         {authUser ? (
                             <>
                                 {/* Profile */}
@@ -96,9 +71,7 @@ const Navbar = () => {
 
                 {/* Mobile Navigation Menu */}
                 {isMobileMenuOpen && (
-                    <div className={`md:hidden border-t py-4 ${
-                        darkMode ? 'border-gray-700' : 'border-gray-100'
-                    }`}>
+                    <div className={`md:hidden border-t py-4 `}>
                         <div className="flex flex-col space-y-3">
                             {/* Settings */}
                             <Link to="/settings" className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors `}>
@@ -106,14 +79,6 @@ const Navbar = () => {
                                 <span>Settings</span>
                             </Link>
 
-                            {/* Theme Toggle */}
-                            <button 
-                                onClick={() => setDarkMode(!darkMode)}
-                                className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-colors `}
-                            >
-                                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-                                <span>Theme</span>
-                            </button>
 
                             {/* Conditional Mobile Menu Items based on authUser */}
                             {authUser ? (
