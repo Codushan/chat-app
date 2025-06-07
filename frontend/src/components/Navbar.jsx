@@ -23,7 +23,8 @@ const Navbar = () => {
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <Link to="/" className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        <Link to="/" className="text-2xl flex items-center sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                            <img src="/baatwaat.png" alt="Logo" className="h-12 w-auto inline-block mr-2" />
                             BAATWAAT
                         </Link>
                     </div>
