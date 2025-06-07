@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors : {
-        origin: [""], // Replace with your frontend URL
+        origin: "https://baatwaat.onrender.com", // Replace with your frontend URL
     },
 });
 

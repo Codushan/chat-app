@@ -97,7 +97,7 @@ export const useAuthStore = create((set, get) => ({
       console.warn('No user authenticated, skipping socket connection');
       return;
     }
-    const socket = io(SOCKET_URL, {
+    const socket = io({
       query: {
         userId: authUser._id,
       }
